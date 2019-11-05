@@ -1,6 +1,4 @@
-//2. Import the required packages.
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 const List<String> currenciesList = [
@@ -37,7 +35,9 @@ const bitcoinAverageURL =
     'https://apiv2.bitcoinaverage.com/indices/global/ticker';
 
 class CoinData {
-  Future getCoinData(selectedCurrency) async {
+  Future getCoinData(String selectedCurrency) async {
+    //TODO 4: Use a for loop here to loop through the cryptoList and request the data for each of them in turn.
+    //TODO 5: Return a Map of the results instead of a single value.
     String requestURL = '$bitcoinAverageURL/BTC$selectedCurrency';
     http.Response response = await http.get(requestURL);
     if (response.statusCode == 200) {
