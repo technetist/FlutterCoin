@@ -1,3 +1,5 @@
+//2. Import the required packages.
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 const List<String> currenciesList = [
@@ -34,11 +36,18 @@ const bitcoinAverageURL =
     'https://apiv2.bitcoinaverage.com/indices/global/ticker';
 
 class CoinData {
-  getCoinData() async {
-    var response = await http
-        .get('https://apiv2.bitcoinaverage.com/indices/global/ticker/BTCUSD');
+  //TODO 3: Update getCoinData to take the selectedCurrency as an input.
+  Future getCoinData() async {
+    //TODO 4: Update the URL to use the selectedCurrency input.
+    String requestURL = '$bitcoinAverageURL/BTCUSD';
+    http.Response response = await http.get(requestURL);
     if (response.statusCode == 200) {
-      return response.body;
+      var decodedData = jsonDecode(response.body);
+      var lastPrice = decodedData['last'];
+      return lastPrice;
+    } else {
+      print(response.statusCode);
+      throw 'Problem with the get request';
     }
   }
 }

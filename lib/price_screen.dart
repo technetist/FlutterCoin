@@ -1,10 +1,7 @@
-import 'dart:convert';
-import 'dart:io' show Platform;
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/cupertino.dart';
 import 'coin_data.dart';
+import 'dart:io' show Platform;
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -12,8 +9,8 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
+  //TODO 6: Update the default currency to AUD, the first item in the currencyList.
   String selectedCurrency = 'USD';
-  double lastPrice = 0;
 
   DropdownButton<String> androidDropdown() {
     List<DropdownMenuItem<String>> dropdownItems = [];
@@ -30,6 +27,7 @@ class _PriceScreenState extends State<PriceScreen> {
       items: dropdownItems,
       onChanged: (value) {
         setState(() {
+          //TODO 2: Call getData() when the picker/dropdown changes.
           selectedCurrency = value;
         });
       },
@@ -47,20 +45,23 @@ class _PriceScreenState extends State<PriceScreen> {
       itemExtent: 32.0,
       onSelectedItemChanged: (selectedIndex) {
         print(selectedIndex);
+        //TODO 1: Save the selected currency to the property selectedCurrency
+        //TODO 2: Call getData() when the picker/dropdown changes.
       },
       children: pickerItems,
     );
   }
 
-  getData() async {
-    var coinData = await CoinData().getCoinData();
-    if (coinData != null) {
-      var jsonData = json.decode(coinData);
+  String bitcoinValue = '?';
+
+  void getData() async {
+    try {
+      double data = await CoinData().getCoinData();
       setState(() {
-        if (jsonData['last'] != null) {
-          lastPrice = jsonData['last'];
-        }
+        bitcoinValue = data.toStringAsFixed(0);
       });
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -91,7 +92,8 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = $lastPrice USD',
+                  //TODO 5: Update the currency name depending on the selectedCurrency.
+                  '1 BTC = $bitcoinValue USD',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
